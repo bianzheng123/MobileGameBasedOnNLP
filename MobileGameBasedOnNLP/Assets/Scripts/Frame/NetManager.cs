@@ -96,6 +96,10 @@ public static class NetManager
         int count = socket.EndSend(ar);
     }
 
+    public static void Update()
+    {
+        Broker.PlaceOrders();
+    }
 
     private static string TrimEnd()
     {
@@ -122,7 +126,7 @@ public static class NetManager
             {
                 throw new Exception("接收缓冲区长度不够，需要扩容");
             }
-            Gamedata.instructions.Add(str);
+            Broker.TakeInstruction(str);
 
             Array.Clear(receiveBuffer,0,DEFAULT_SIZE);
             socket.BeginReceive(receiveBuffer, 0, DEFAULT_SIZE, 0, ReceiveCallback, socket);

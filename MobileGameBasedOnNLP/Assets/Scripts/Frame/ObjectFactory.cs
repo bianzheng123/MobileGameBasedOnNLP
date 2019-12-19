@@ -18,10 +18,7 @@ public static class ObjectFactory
         int prefabIndex = 0;
         if (!ToInt(x_input, out x) || !ToInt(y_input, out y) || !ToInt(prefabIndex_input,out prefabIndex)) return null;
 
-        
         Instantiation instantiation = null;
-        Debug.Log(type);
-        Debug.Log(type.Length);
         switch (type.Trim())
         {
             case "desk":

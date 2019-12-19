@@ -126,12 +126,11 @@ public class ObjectTipPanel : BasePanel
             PanelManager.Open<TipPanel>("出现bug，选择的索引和模型的索引相同");
             return;
         }
-
         //生成指令
         ChangeModel changeModel = ObjectFactory.ChangeModelObject(type,num.ToString(),selectedIndex);
         if(changeModel != null)
         {
-            Gamedata.broker.TakeOrder(changeModel);
+            Broker.TakeChangeModelOrder(changeModel);
             Close();
         }
         else

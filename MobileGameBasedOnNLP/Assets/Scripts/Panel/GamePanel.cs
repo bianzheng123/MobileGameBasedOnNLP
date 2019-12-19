@@ -22,6 +22,20 @@ public class GamePanel : BasePanel
     //显示状态的按钮
     private Text stateText;
 
+    public string ReturnContent
+    {
+        set
+        {
+            if (returnContent.text == "")
+            {
+                returnContent.text = value;
+            }
+            else
+            {
+                returnContent.text += "\n" + value;
+            }
+        }
+    }
 
     //初始化
     public override void OnInit()
@@ -33,6 +47,7 @@ public class GamePanel : BasePanel
     //显示
     public override void OnShow(params object[] args)
     {
+        NetManager.Connect("127.0.0.1", 8888);
         //寻找组件
         instructionInput = skin.transform.Find("InstructionInput/Input").GetComponent<InputField>();
         executeInstructionButton = skin.transform.Find("ExecuteInstructionButton").GetComponent<Button>();
@@ -70,37 +85,6 @@ public class GamePanel : BasePanel
     public void OnQuitButtonClick()
     {
         SystemOperation.Quit();
-    }
-
-    private void Update()
-    {
-        //处理发送过来的指令
-        for (int i = 0; i < Gamedata.instructions.Count; i++)
-        {
-            string instruction = Gamedata.instructions[i];
-            stateText.text = "处理指令： " + instruction;
-            AddReturnContentText(instruction);
-            //生成Order
-            Order order = InstructionParser.ExecuteLanguageInstruction(instruction);
-            if (order != null)
-            {
-                Gamedata.broker.TakeOrder(order);
-            }
-        }
-        Gamedata.instructions.Clear();
-    }
-
-    private void AddReturnContentText(string instruction)
-    {
-        Debug.Log(instruction);
-        if (returnContent.text == "")
-        {
-            returnContent.text = instruction;
-        }
-        else
-        {
-            returnContent.text += "\n" + instruction;
-        }
     }
 
     private void AddInstructionContentText(string text)

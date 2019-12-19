@@ -13,7 +13,7 @@ public static class PanelManager
     //层级列表
     private static Dictionary<Layer, Transform> layers = new Dictionary<Layer, Transform>();
     //面板列表
-    public static Dictionary<string, BasePanel> panels = new Dictionary<string, BasePanel>();
+    private static Dictionary<string, BasePanel> panels = new Dictionary<string, BasePanel>();
     //结构
     public static Transform root;
     public static Transform canvas;
@@ -26,6 +26,22 @@ public static class PanelManager
         Transform tip = canvas.Find("Tip");
         layers.Add(Layer.Panel, panel);
         layers.Add(Layer.Tip, tip);
+    }
+
+    public static bool ContainsPanel<T>() where T : BasePanel
+    {
+        string name = typeof(T).ToString();
+        return panels.ContainsKey(name);
+    }
+
+    public static T GetPanel<T>() where T : BasePanel
+    {
+        string name = typeof(T).ToString();
+        if (panels.ContainsKey(name))
+        {
+            return (T)panels[name];
+        }
+        return null;
     }
 
     //打开面板
