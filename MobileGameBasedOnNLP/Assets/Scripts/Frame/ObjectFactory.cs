@@ -11,20 +11,24 @@ public static class ObjectFactory
 
     private static DeskManager deskManager = DeskManager.Instance;
 
-    public static Instantiation InstantiationObject(string type,string x_input,string y_input)
+    public static Instantiation InstantiationObject(string type,string x_input,string y_input,string prefabIndex_input)
     {
         int x = 0;
         int y = 0;
-        if (!ToInt(x_input, out x) || !ToInt(y_input, out y)) return null;
+        int prefabIndex = 0;
+        if (!ToInt(x_input, out x) || !ToInt(y_input, out y) || !ToInt(prefabIndex_input,out prefabIndex)) return null;
 
+        
         Instantiation instantiation = null;
-        switch (type)
+        Debug.Log(type);
+        Debug.Log(type.Length);
+        switch (type.Trim())
         {
-            case "桌子":
-                instantiation = new Instantiation(deskManager, new Vector3(x, 1f, y));
+            case "desk":
+                instantiation = new Instantiation(deskManager, new Vector3(x, 0, y), prefabIndex,new Vector3(0,0,0));
                 break;
-            case "椅子":
-                instantiation = new Instantiation(chairManager, new Vector3(x, 1f, y));
+            case "chair":
+                instantiation = new Instantiation(chairManager, new Vector3(x, 0, y), prefabIndex,new Vector3(0,180,0));
                 break;
         }
         return instantiation;
@@ -38,10 +42,10 @@ public static class ObjectFactory
         Delete delete = null;
         switch (type)
         {
-            case "桌子":
+            case "desk":
                 delete = new Delete(deskManager, num);
                 break;
-            case "椅子":
+            case "chair":
                 delete = new Delete(chairManager, num);
                 break;
         }
@@ -55,31 +59,36 @@ public static class ObjectFactory
         Move move = null;
         switch (type)
         {
-            case "桌子":
+            case "desk":
                 move = new Move(deskManager,new Vector3(x,0,y),num);
                 break;
-            case "椅子":
+            case "chair":
                 move = new Move(chairManager,new Vector3(x,0,y),num);
                 break;
         }
         return move;
     }
 
-    public static ChangeColor ChangeColorObject(string type,string num_input,string red_input,string green_input,string blue_input,string alpha_input)
+    public static ChangeModel ChangeModelObject(string type,string num_input,int prefabIndex)
     {
-        int num = 0, red = 0, green = 0, blue = 0,alpha = 0;
-        if (!ToInt(num_input, out num) || !ToInt(red_input, out red) || !ToInt(green_input, out green) || !ToInt(blue_input,out blue) || !ToInt(alpha_input, out alpha)) return null;
-        ChangeColor changeColor = null;
+        int num = 0;
+        if (!ToInt(num_input, out num)) return null;
+        ChangeModel changeModel = null;
         switch (type)
         {
-            case "桌子":
-                changeColor = new ChangeColor(deskManager,num,red,green,blue,alpha);
+            case "desk":
+                changeModel = new ChangeModel(deskManager,num,prefabIndex);
                 break;
-            case "椅子":
-                changeColor = new ChangeColor(chairManager,num,red,green,blue,alpha);
+            case "chair":
+                changeModel = new ChangeModel(chairManager,num,prefabIndex);
                 break;
         }
-        return changeColor;
+        return changeModel;
+    }
+
+    public static Exit Exit()
+    {
+        return new Exit();
     }
 
     /// <summary>

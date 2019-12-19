@@ -8,7 +8,8 @@ using UnityEngine;
 public class BaseObject : MonoBehaviour
 {
     protected Camera mainCamera;
-    public int number = 0;
+    public int number = -1;
+    public int prefabIndex = -1;
 
     //编号显示的偏移量
     protected Vector2 offset;
