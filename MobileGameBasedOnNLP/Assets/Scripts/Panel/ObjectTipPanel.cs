@@ -25,6 +25,7 @@ public class ObjectTipPanel : BasePanel
     //deskManager和chairManager的引用
     private DeskManager deskManager = DeskManager.Instance;
     private ChairManager chairManager = ChairManager.Instance;
+    private BedManager bedManager = BedManager.Instance;
 
     //初始化
     public override void OnInit()
@@ -60,6 +61,15 @@ public class ObjectTipPanel : BasePanel
                 }
                 modelIndex = bo.prefabIndex;
                 break;
+            case "bed":
+                prefablen = BedManager.prefabsLen;
+                bo = bedManager.GetBaseObjectByIndex(num - 1);
+                if (bo == null)
+                {
+                    Close();
+                }
+                modelIndex = bo.prefabIndex;
+                break;
         }
         //寻找组件
         item = skin.transform.Find("Item").gameObject;
@@ -84,11 +94,12 @@ public class ObjectTipPanel : BasePanel
             {
                 case "chair":
                     go.GetComponent<Image>().sprite = ResManager.LoadUISprite(ChairManager.prefabImagePaths[i]);
-                    
-                    //chooseButton[i].onClick.AddListener(OnChooseClick(type,i));
                     break;
                 case "desk":
                     go.GetComponent<Image>().sprite = ResManager.LoadUISprite(DeskManager.prefabImagePaths[i]);
+                    break;
+                case "bed":
+                    go.GetComponent<Image>().sprite = ResManager.LoadUISprite(BedManager.prefabImagePaths[i]);
                     break;
             }
             if(i == modelIndex)

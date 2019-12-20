@@ -37,6 +37,11 @@ public class GamePanel : BasePanel
         }
     }
 
+    public string StateText
+    {
+        set { stateText.text = value; }
+    }
+
     //初始化
     public override void OnInit()
     {

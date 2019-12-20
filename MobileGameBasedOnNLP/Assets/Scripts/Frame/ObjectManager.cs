@@ -128,11 +128,4 @@ public abstract class ObjectManager
         objectList[gameobjectIndex] = baseObject;
     }
 
-    /// <summary>
-    /// 判断是否在范围中，左闭右闭
-    /// </summary>
-    private bool InRange(int value,int min,int max)
-    {
-        return min <= value && value <= max;
-    }
 }

@@ -16,10 +16,11 @@ public class ChairManager : ObjectManager
         prefabImagePaths = new string[prefabsLen];
         for (int i = 0; i < prefabsLen; i++)
         {
-            prefabs[i] = ResManager.LoadPrefab("Prefabs/Chair_" + (i+1));
-            prefabImagePaths[i] = "Image/Chair_" + (i+1);
+            prefabs[i] = ResManager.LoadPrefab("Prefabs/Chair/Chair_" + (i+1));
+            prefabImagePaths[i] = "Image/Chair/Chair_" + (i+1);
         }
     }
+
     public static ChairManager Instance
     {
         get

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// 根据不同的指令返回不同的指令对象
@@ -11,6 +12,8 @@ public static class ObjectFactory
 
     private static DeskManager deskManager = DeskManager.Instance;
 
+    private static BedManager bedManager = BedManager.Instance;
+
     public static Instantiation InstantiationObject(string type,string x_input,string y_input,string prefabIndex_input)
     {
         int x = 0;
@@ -19,7 +22,7 @@ public static class ObjectFactory
         if (!ToInt(x_input, out x) || !ToInt(y_input, out y) || !ToInt(prefabIndex_input,out prefabIndex)) return null;
 
         Instantiation instantiation = null;
-        switch (type.Trim())
+        switch (type)
         {
             case "desk":
                 instantiation = new Instantiation(deskManager, new Vector3(x, 0, y), prefabIndex,new Vector3(0,0,0));
@@ -27,6 +30,11 @@ public static class ObjectFactory
             case "chair":
                 instantiation = new Instantiation(chairManager, new Vector3(x, 0, y), prefabIndex,new Vector3(0,180,0));
                 break;
+            case "bed":
+                instantiation = new Instantiation(bedManager,new Vector3(x,0,y),prefabIndex,new Vector3(0,180,0));
+                break;
+            default:
+                throw new Exception("找不到生成模型");
         }
         return instantiation;
     }
@@ -45,6 +53,11 @@ public static class ObjectFactory
             case "chair":
                 delete = new Delete(chairManager, num);
                 break;
+            case "bed":
+                delete = new Delete(bedManager, num);
+                break;
+            default:
+                throw new Exception("找不到需要删除的模型");
         }
         return delete;
     }
@@ -62,6 +75,11 @@ public static class ObjectFactory
             case "chair":
                 move = new Move(chairManager,new Vector3(x,0,y),num);
                 break;
+            case "bed":
+                move = new Move(bedManager, new Vector3(x, 0, y), num);
+                break;
+            default:
+                throw new Exception("找不到需要移动的模型");
         }
         return move;
     }
@@ -79,6 +97,11 @@ public static class ObjectFactory
             case "chair":
                 changeModel = new ChangeModel(chairManager,num,prefabIndex);
                 break;
+            case "bed":
+                changeModel = new ChangeModel(bedManager, num, prefabIndex);
+                break;
+            default:
+                throw new Exception("找不到需要切换的模型");
         }
         return changeModel;
     }

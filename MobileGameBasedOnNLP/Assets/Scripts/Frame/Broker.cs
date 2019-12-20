@@ -29,7 +29,10 @@ public static class Broker
         GamePanel gamePanel = PanelManager.GetPanel<GamePanel>();
         foreach (string instruction in instructionList)
         {
-            gamePanel.ReturnContent = instruction;
+            if(gamePanel != null)
+            {
+                gamePanel.ReturnContent = instruction;
+            }
             Order order = ParseInstruction(instruction);
             if(order != null)
             {
@@ -39,6 +42,10 @@ public static class Broker
         foreach (Order order in orderList)
         {
             order.Execute();
+        }
+        if(orderList.Count > 0 && gamePanel != null)
+        {
+            gamePanel.StateText = "指令执行完成";
         }
         instructionList.Clear();
         orderList.Clear();
