@@ -53,6 +53,7 @@ public class GamePanel : BasePanel
     public override void OnShow(params object[] args)
     {
         NetManager.Connect("127.0.0.1", 8888);
+        InstructionParser.AddInstructionListener();
         //寻找组件
         instructionInput = skin.transform.Find("InstructionInput/Input").GetComponent<InputField>();
         executeInstructionButton = skin.transform.Find("ExecuteInstructionButton").GetComponent<Button>();
@@ -66,7 +67,7 @@ public class GamePanel : BasePanel
         executeInstructionButton.onClick.AddListener(OnExecuteInstructionButtonClick);
     }
 
-    public void ExecuteInstruction(string text)
+    private void ExecuteInstruction(string text)
     {
         AddInstructionContentText(text);
         //发送给网络，让他们处理
@@ -74,7 +75,7 @@ public class GamePanel : BasePanel
         stateText.text = "指令处理中，请稍后";
     }
 
-    public void OnExecuteInstructionButtonClick()
+    private void OnExecuteInstructionButtonClick()
     {
         string text = instructionInput.text;
         if(text == "")
@@ -87,7 +88,7 @@ public class GamePanel : BasePanel
         
     }
 
-    public void OnQuitButtonClick()
+    private void OnQuitButtonClick()
     {
         SystemOperation.Quit();
     }

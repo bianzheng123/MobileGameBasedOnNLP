@@ -19,13 +19,8 @@ public class ObjectTipPanel : BasePanel
     //目前的模型编号
     private int modelIndex;
     //这个游戏物体的名称
-    private int num;
-    //游戏物体的形状
-    private string type;
-    //deskManager和chairManager的引用
-    private DeskManager deskManager = DeskManager.Instance;
-    private ChairManager chairManager = ChairManager.Instance;
-    private BedManager bedManager = BedManager.Instance;
+    private int gameobjectIndex;
+    private ObjectManager om;
 
     //初始化
     public override void OnInit()
@@ -37,71 +32,36 @@ public class ObjectTipPanel : BasePanel
     public override void OnShow(params object[] args)
     {
         //物体的编号
-        num = (int)args[0];//上文保证了一定可以转换成int
-        type = (string)args[1];
-        int prefablen = 0;
-        switch (type)
+        gameobjectIndex = (int)args[0];//上文保证了一定可以转换成int
+        om = (ObjectManager)args[1];
+        int prefablen = om.prefabsLen;
+        BaseObject bo = om.GetBaseObjectByIndex(gameobjectIndex - 1);
+        if (bo == null)
         {
-            case "desk":
-                prefablen = DeskManager.prefabsLen;
-                BaseObject bo = deskManager.GetBaseObjectByIndex(num - 1);
-                if(bo == null)
-                {
-                    Close();
-                }
-                modelIndex = bo.prefabIndex;
-                
-                break;
-            case "chair":
-                prefablen = ChairManager.prefabsLen;
-                bo = chairManager.GetBaseObjectByIndex(num - 1);
-                if (bo == null)
-                {
-                    Close();
-                }
-                modelIndex = bo.prefabIndex;
-                break;
-            case "bed":
-                prefablen = BedManager.prefabsLen;
-                bo = bedManager.GetBaseObjectByIndex(num - 1);
-                if (bo == null)
-                {
-                    Close();
-                }
-                modelIndex = bo.prefabIndex;
-                break;
+            Close();
         }
+        modelIndex = bo.prefabIndex;
+
         //寻找组件
         item = skin.transform.Find("Item").gameObject;
         content = skin.transform.Find("Scroll View/Viewport/Content");
         okButton = skin.transform.Find("OkButton").GetComponent<Button>();
         chooseToggle = new Toggle[prefablen];
         //对面板进行初始化
-        InitPanel(prefablen,type);
+        InitPanel(prefablen,om);
         //监听
         okButton.onClick.AddListener(OnOkClick);
 
     }
 
-    private void InitPanel(int prefablen,string type)
+    private void InitPanel(int prefablen,ObjectManager om)
     {
         //使用toggle，由于是在同一个panel中，不需要自己重新设置内容
         for(int i = 0; i < prefablen; i++)
         {
             GameObject go = Instantiate(item);
             chooseToggle[i] = go.transform.Find("Toggle").GetComponent<Toggle>();
-            switch (type)
-            {
-                case "chair":
-                    go.GetComponent<Image>().sprite = ResManager.LoadUISprite(ChairManager.prefabImagePaths[i]);
-                    break;
-                case "desk":
-                    go.GetComponent<Image>().sprite = ResManager.LoadUISprite(DeskManager.prefabImagePaths[i]);
-                    break;
-                case "bed":
-                    go.GetComponent<Image>().sprite = ResManager.LoadUISprite(BedManager.prefabImagePaths[i]);
-                    break;
-            }
+            go.GetComponent<Image>().sprite = ResManager.LoadUISprite(om.prefabImagePaths[i]);
             if(i == modelIndex)
             {
                 chooseToggle[i].gameObject.SetActive(false);
@@ -138,16 +98,9 @@ public class ObjectTipPanel : BasePanel
             return;
         }
         //生成指令
-        ChangeModel changeModel = ObjectFactory.ChangeModelObject(type,num.ToString(),selectedIndex);
-        if(changeModel != null)
-        {
-            Broker.TakeChangeModelOrder(changeModel);
-            Close();
-        }
-        else
-        {
-            PanelManager.Open<TipPanel>("发生错误");
-        }
+        string instruction = "ChangeModelAfter " + gameobjectIndex + " " + selectedIndex + " " + om.type;
+        Broker.TakeInstruction(instruction);
+        Close();
         
     }
 }

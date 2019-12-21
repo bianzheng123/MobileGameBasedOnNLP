@@ -9,6 +9,7 @@ public class GameMain : MonoBehaviour
     {
         //初始化
         PanelManager.Init();
+        Broker.Init();
         //打开登陆面板
         PanelManager.Open<GamePanel>();
         
@@ -16,6 +17,6 @@ public class GameMain : MonoBehaviour
 
     private void Update()
     {
-        NetManager.Update();
+        Broker.Update();
     }
 }
