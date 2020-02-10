@@ -68,11 +68,12 @@ public static class NetManager
         {
             return;
         }
-
+        Debug.Log(str);
         byte[] array = System.Text.Encoding.Default.GetBytes(str);
 
-        Array.Copy(array,0,sendBuffer,0,str.Length);
+        Array.Copy(array,0,sendBuffer,0,array.Length);
         //Debug.Log(sendBuffer.Length);
+        //Debug.Log(array.Length);
 
         socket.BeginSend(sendBuffer, 0, sendBuffer.Length, 0, SendCallback, socket);
 
